@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca Pública - Projeto de Banco de Dados</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 30px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        
+        .diagram-container {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+        
+        .er-diagram {
+            display: inline-block;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .entity {
+            border: 2px solid #2980b9;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin: 10px;
+            background: #ecf0f1;
+            display: inline-block;
+            min-width: 120px;
+        }
+        
+        .relationship {
+            border: 2px solid #e74c3c;
+            border-radius: 50px;
+            padding: 8px 15px;
+            margin: 10px;
+            background: #fadbd8;
+            display: inline-block;
+        }
+        
+        .attribute {
+            border: 1px solid #27ae60;
+            border-radius: 50px;
+            padding: 5px 10px;
+            margin: 3px;
+            background: #d5f4e6;
+            display: inline-block;
+            font-size: 0.9em;
+        }
+        
+        .primary-key {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        
+        .table-schema {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            margin: 15px;
+            display: inline-block;
+            vertical-align: top;
+            min-width: 280px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table-header {
+            background: #3498db;
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .table-content {
+            padding: 0;
+        }
+        
+        .field {
+            padding: 8px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .field:last-child {
+            border-bottom: none;
+        }
+        
+        .field-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .field-type {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        
+        .pk {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .fk {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .requirements {
+            background: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .requirements h3 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+        
+        .requirements ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .requirements li {
+            margin-bottom: 8px;
+        }
+        
+        .legend {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin: 5px 15px 5px 0;
+            font-size: 0.9em;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 3px;
+        }
+        
+        .cardinality {
+            font-size: 0.8em;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .table-schema {
+                display: block;
+                margin: 10px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Biblioteca Pública</h1>
+        <p class="subtitle">Projeto Conceitual e Lógico de Banco de Dados</p>
+        
+        <div class="requirements">
+            <h3>📋 Requisitos do Sistema</h3>
+            <ul>
+                <li>Manter registro de <strong>livros</strong> com título, autor, ano, exemplares disponíveis</li>
+                <li>Registrar informações sobre <strong>autores</strong> e suas obras</li>
+                <li>Cadastrar <strong>membros</strong> da biblioteca com dados pessoais</li>
+                <li>Controlar <strong>empréstimos</strong> com datas e status de devolução</li>
+                <li>Organizar livros por <strong>categorias</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>1. PROJETO CONCEITUAL - Diagrama Entidade-Relacionamento (Notação Chen)</h2>
+        
+        <div class="diagram-container">
+            <div class="er-diagram">
+                <svg width="900" height="600" viewBox="0 0 900 600">
+                    <!-- Entidades -->
+                    <rect x="50" y="50" width="120" height="80" fill="#ecf0f1" stroke="#2980b9" stroke-width="2" rx="5"/>
+                    <text x="110" y="95" text-anchor="middle" font-weight="bold" font-size="14">AUTOR</text>
+                    
+                    <rect x="650" y="50" width="120" height="80" fill="#ecf0f1" stroke="#2980b9" stroke-width="2" rx="5"/>
+                    <text x="710" y="95" text-anchor="middle" font-weight="bold" font-size="14">CATEGORIA</text>
+                    
+                    <rect x="350" y="150" width="120" height="80" fill="#ecf0f1" stroke="#2980b9" stroke-width="2" rx="5"/>
+                    <text x="410" y="195" text-anchor="middle" font-weight="bold" font-size="14">LIVRO</text>
+                    
+                    <rect x="50" y="350" width="120" height="80" fill="#ecf0f1" stroke="#2980b9" stroke-width="2" rx="5"/>
+                    <text x="110" y="395" text-anchor="middle" font-weight="bold" font-size="14">MEMBRO</text>
+                    
+                    <rect x="650" y="350" width="120" height="80" fill="#ecf0f1" stroke="#2980b9" stroke-width="2" rx="5"/>
+                    <text x="710" y="395" text-anchor="middle" font-weight="bold" font-size="14">EMPRÉSTIMO</text>
+                    
+                    <!-- Relacionamentos -->
+                    <ellipse cx="250" cy="100" rx="50" ry="25" fill="#fadbd8" stroke="#e74c3c" stroke-width="2"/>
+                    <text x="250" y="105" text-anchor="middle" font-weight="bold" font-size="12">ESCREVE</text>
+                    
+                    <ellipse cx="550" cy="125" rx="50" ry="25" fill="#fadbd8" stroke="#e74c3c" stroke-width="2"/>
+                    <text x="550" y="130" text-anchor="middle" font-weight="bold" font-size="12">PERTENCE</text>
+                    
+                    <ellipse cx="250" cy="300" rx="50" ry="25" fill="#fadbd8" stroke="#e74c3c" stroke-width="2"/>
+                    <text x="250" y="305" text-anchor="middle" font-weight="bold" font-size="12">EMPRESTA</text>
+                    
+                    <!-- Linhas de conexão -->
+                    <line x1="170" y1="90" x2="200" y2="100" stroke="black" stroke-width="2"/>
+                    <line x1="300" y1="100" x2="350" y2="170" stroke="black" stroke-width="2"/>
+                    
+                    <line x1="470" y1="170" x2="500" y2="125" stroke="black" stroke-width="2"/>
+                    <line x1="600" y1="125" x2="650" y2="90" stroke="black" stroke-width="2"/>
+                    
+                    <line x1="170" y1="390" x2="200" y2="300" stroke="black" stroke-width="2"/>
+                    <line x1="300" y1="300" x2="350" y2="210" stroke="black" stroke-width="2"/>
+                    <line x1="470" y1="210" x2="650" y2="390" stroke="black" stroke-width="2"/>
+                    
+                    <!-- Cardinalidades -->
+                    <text x="180" y="85" font-size="12" fill="#e74c3c" font-weight="bold">1</text>
+                    <text x="330" y="165" font-size="12" fill="#e74c3c" font-weight="bold">N</text>
+                    
+                    <text x="480" y="165" font-size="12" fill="#e74c3c" font-weight="bold">N</text>
+                    <text x="630" y="85" font-size="12" fill="#e74c3c" font-weight="bold">1</text>
+                    
+                    <text x="180" y="385" font-size="12" fill="#e74c3c" font-weight="bold">1</text>
+                    <text x="330" y="215" font-size="12" fill="#e74c3c" font-weight="bold">N</text>
+                    <text x="630" y="385" font-size="12" fill="#e74c3c" font-weight="bold">N</text>
+                    
+                    <!-- Atributos principais -->
+                    <ellipse cx="110" cy="20" rx="35" ry="15" fill="#d5f4e6" stroke="#27ae60"/>
+                    <text x="110" y="25" text-anchor="middle" font-size="10" text-decoration="underline" font-weight="bold">id_autor</text>
+                    
+                    <ellipse cx="410" cy="100" rx="25" ry="15" fill="#d5f4e6" stroke="#27ae60"/>
+                    <text x="410" y="105" text-anchor="middle" font-size="10" text-decoration="underline" font-weight="bold">isbn</text>
+                    
+                    <ellipse cx="110" cy="480" rx="35" ry="15" fill="#d5f4e6" stroke="#27ae60"/>
+                    <text x="110" y="485" text-anchor="middle" font-size="10" text-decoration="underline" font-weight="bold">id_membro</text>
+                    
+                    <ellipse cx="710" cy="480" rx="45" ry="15" fill="#d5f4e6" stroke="#27ae60"/>
+                    <text x="710" y="485" text-anchor="middle" font-size="10" text-decoration="underline" font-weight="bold">id_emprestimo</text>
+                    
+                    <ellipse cx="710" cy="20" rx="40" ry="15" fill="#d5f4e6" stroke="#27ae60"/>
+                    <text x="710" y="25" text-anchor="middle" font-size="10" text-decoration="underline" font-weight="bold">id_categoria</text>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h4>Legenda do Diagrama ER:</h4>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #ecf0f1; border: 2px solid #2980b9;"></span>
+                Entidade
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #fadbd8; border: 2px solid #e74c3c; border-radius: 50%;"></span>
+                Relacionamento
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #d5f4e6; border: 1px solid #27ae60; border-radius: 50%;"></span>
+                Atributo
+            </div>
+            <div class="legend-item">
+                <strong>Sublinhado:</strong> Chave Primária
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>2. PROJETO LÓGICO - Modelo Lógico Relacional (Notação UML)</h2>
+        
+        <div class="diagram-container">
+            <!-- Tabela AUTOR -->
+            <div class="table-schema">
+                <div class="table-header">AUTOR</div>
+                <div class="table-content">
+                    <div class="field pk">
+                        <span class="field-name">id_autor</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">nome</span>
+                        <span class="field-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">nacionalidade</span>
+                        <span class="field-type">VARCHAR(50)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">data_nascimento</span>
+                        <span class="field-type">DATE</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">biografia</span>
+                        <span class="field-type">TEXT</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela CATEGORIA -->
+            <div class="table-schema">
+                <div class="table-header">CATEGORIA</div>
+                <div class="table-content">
+                    <div class="field pk">
+                        <span class="field-name">id_categoria</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">nome</span>
+                        <span class="field-type">VARCHAR(50)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">descricao</span>
+                        <span class="field-type">TEXT</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela LIVRO -->
+            <div class="table-schema">
+                <div class="table-header">LIVRO</div>
+                <div class="table-content">
+                    <div class="field pk">
+                        <span class="field-name">isbn</span>
+                        <span class="field-type">VARCHAR(13)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">titulo</span>
+                        <span class="field-type">VARCHAR(200)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">ano_publicacao</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">editora</span>
+                        <span class="field-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">num_paginas</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">exemplares_total</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">exemplares_disponiveis</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">id_autor</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">id_categoria</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela MEMBRO -->
+            <div class="table-schema">
+                <div class="table-header">MEMBRO</div>
+                <div class="table-content">
+                    <div class="field pk">
+                        <span class="field-name">id_membro</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">nome</span>
+                        <span class="field-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">cpf</span>
+                        <span class="field-type">VARCHAR(11)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">endereco</span>
+                        <span class="field-type">VARCHAR(200)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">telefone</span>
+                        <span class="field-type">VARCHAR(15)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">email</span>
+                        <span class="field-type">VARCHAR(100)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">data_cadastro</span>
+                        <span class="field-type">DATE</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">status_ativo</span>
+                        <span class="field-type">BOOLEAN</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabela EMPRÉSTIMO -->
+            <div class="table-schema">
+                <div class="table-header">EMPRÉSTIMO</div>
+                <div class="table-content">
+                    <div class="field pk">
+                        <span class="field-name">id_emprestimo</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">data_emprestimo</span>
+                        <span class="field-type">DATE</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">data_devolucao_prevista</span>
+                        <span class="field-type">DATE</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">data_devolucao_real</span>
+                        <span class="field-type">DATE</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">status_emprestimo</span>
+                        <span class="field-type">VARCHAR(20)</span>
+                    </div>
+                    <div class="field">
+                        <span class="field-name">multa</span>
+                        <span class="field-type">DECIMAL(10,2)</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">id_membro</span>
+                        <span class="field-type">INTEGER</span>
+                    </div>
+                    <div class="field fk">
+                        <span class="field-name">isbn</span>
+                        <span class="field-type">VARCHAR(13)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h4>Legenda do Modelo Lógico:</h4>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #fff3cd; border-left: 4px solid #ffc107;"></span>
+                Chave Primária (PK)
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #d4edda; border-left: 4px solid #28a745;"></span>
+                Chave Estrangeira (FK)
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>3. RELACIONAMENTOS E CARDINALIDADES</h2>
+        
+        <h3>3.1 Relacionamentos Identificados:</h3>
+        <ul>
+            <li><strong>AUTOR (1) --- ESCREVE --- (N) LIVRO</strong>
+                <br><em>Um autor pode escrever vários livros, mas cada livro tem apenas um autor principal.</em></li>
+            
+            <li><strong>CATEGORIA (1) --- PERTENCE --- (N) LIVRO</strong>
+                <br><em>Uma categoria pode conter vários livros, mas cada livro pertence a apenas uma categoria.</em></li>
+            
+            <li><strong>MEMBRO (1) --- EMPRESTA --- (N) EMPRÉSTIMO</strong>
+                <br><em>Um membro pode ter vários empréstimos ao longo do tempo.</em></li>
+            
+            <li><strong>LIVRO (1) --- EMPRESTADO --- (N) EMPRÉSTIMO</strong>
+                <br><em>Um livro pode ser emprestado várias vezes (em momentos diferentes).</em></li>
+        </ul>
+        
+        <h3>3.2 Regras de Negócio:</h3>
+        <ul>
+            <li>Cada empréstimo refere-se a um único exemplar de um livro</li>
+            <li>O número de exemplares disponíveis deve ser atualizado a cada empréstimo/devolução</li>
+            <li>A data de devolução prevista é calculada automaticamente (ex: 15 dias após empréstimo)</li>
+            <li>Multas são aplicadas em caso de atraso na devolução</li>
+            <li>Membros inativos não podem realizar novos empréstimos</li>
+        </ul>
+        
+        <h3>3.3 Constraints e Índices Recomendados:</h3>
+        <ul>
+            <li><strong>Chaves Primárias:</strong> Índices únicos em todas as PKs</li>
+            <li><strong>Chaves Estrangeiras:</strong> Índices em todas as FKs para otimizar joins</li>
+            <li><strong>Campos únicos:</strong> CPF do membro, ISBN do livro</li>
+            <li><strong>Checks:</strong> Exemplares disponíveis ≤ Exemplares totais</li>
+            <li><strong>Índices compostos:</strong> (id_membro, data_emprestimo) para consultas de histórico</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -16,7 +16,7 @@ Os diagramas e tabelas estão disponíveis no arquivo HTML do projeto.
 
 ## Link do Projeto
 
-[Link do Projeto](#) <!-- Link vazio para ser preenchido depois -->
+[Visualizar Projeto Online](https://gabriel-araujo-git.github.io/sistema-biblioteca/)
 
 ## Autor
 
